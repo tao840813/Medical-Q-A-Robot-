@@ -89,7 +89,7 @@ memory = ConversationBufferMemory(
 )
 
 # ---------------- 主功能 ----------------
-def get_suggestion_chain(question: str):
+def get_suggestion_chain(question: str, profile_text: str = ""):
     with get_mongo_vectorstore() as vectorstore:
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
@@ -108,6 +108,7 @@ def get_suggestion_chain(question: str):
              "你是一個專業的醫生。\n"
              "以下是過去的對話紀錄：{chat_history}\n\n"
              "參考資料：{context}\n\n"
+             "患者基本資料: {profile}"
              "請根據上下文與參考資料，用繁體中文提供簡短建議（≤300字）。"
              "如果患者說了很明顯是誇大的情況，請用日本搞笑藝人的方式吐槽，但吐槽完後還是認真地給予建議。"
              "如果患者說了和症狀 疾病等醫學資訊無關的問題，請用粗魯的語氣叫他閉嘴。"
@@ -122,6 +123,7 @@ def get_suggestion_chain(question: str):
         # 4️⃣ 執行查詢
         result = qa_chain.invoke({
             "input": question,
+            "profile":profile_text,
             "chat_history": memory.load_memory_variables({})["chat_history"]
         })
 

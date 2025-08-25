@@ -83,11 +83,11 @@ if question := st.chat_input("請輸入您的訊息"):
         #    suggestion = chains.get_suggestion_chain(question)
         #    st.write(suggestion.get("result"))
         try:
-           
-           suggestion = chains.get_suggestion_chain(question)
-           print('++++++')
-           print(suggestion)
-           print('++++++')
+           profile_text = f"姓名: {name}, 出生年月日: {birthday.strftime('%Y-%m-%d')}, 血型: {blood_type}"
+           suggestion = chains.get_suggestion_chain(question, profile_text)
+           #print('++++++')
+           #print(type(suggestion),suggestion)
+           #print('++++++')
            set_chat_message(
                "ai",
                suggestion.get("answer"),
